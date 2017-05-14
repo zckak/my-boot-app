@@ -1,0 +1,35 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - 8080:8080
+    restart: always
+    volumes:
+      - .:/myapp
+    depends_on:
+      - db
+      - redis
+    command: ./mvnw spring-boot:run
+    environment:
+      SPRING_MYSQL_HOST: db
+      SPRING_MYSQL_PORT: 3306
+      SPRING_MYSQL_DATABASE: mybootapp
+      SPRING_MYSQL_USERNAME: mybootapp
+      SPRING_MYSQL_PASSWORD: mybootapp
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+  db:
+    image: mysql:5.7
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    restart: always
+    volumes:
+      - ./initb.d:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: mybootapp
+      MYSQL_DATABASE: mybootapp
+      MYSQL_USER: mybootapp
+      MYSQL_PASSWORD: mybootapp
+  redis:
+    image: redis:3.2
+    restart: always

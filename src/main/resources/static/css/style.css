@@ -1,0 +1,56 @@
+@CHARSET "UTF-8";
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.user {
+	overflow: hidden;
+}
+
+.user .icon {
+	display: block;
+	float: left;
+}
+
+.user .name {
+	display: block;
+	float: left;
+}
+
+.item {
+	overflow: hidden;
+}
+
+.item .user-icon {
+	display: block;
+	float: left;
+}
+
+.item .content {
+	display: block;
+	float:left;
+	width: 300px;
+}
+
+.item .content img {
+	width: 100%;
+}
+
+.item .content .created-at {
+	text-align: right;
+}
+
+.black-text {
+	color: black;
+	font-size: 1.2em;
+}
+
+.small-text {
+	color: gray;
+	font-size: 1.0em;
+}

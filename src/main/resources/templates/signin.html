@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<title>ログイン | MyBootApp</title>
+</head>
+<body>
+  <h1><a href="/">MyBootApp</a></h1>
+  <h2>ログイン</h2>
+  <ul th:if="${msgs}">
+    <li th:each="msg:${msgs}" th:text="${msg}"></li>
+  </ul>
+  <form action="/users/signin" method="post">
+    <table>
+      <tr>
+        <td><label for="username">ユーザー名:</label></td>
+        <td><input type="text" name="username" placeholder="ユーザー名" /></td>
+      </tr>
+      <tr>
+        <td><label for="password">パスワード:</label></td>
+        <td><input type="password" name="password" placeholder="パスワード" /></td>
+      </tr>
+      <tr>
+        <td colspan="2"><input type="submit" value="ログイン" /></td>
+      </tr>
+    </table>
+  </form>
+  <a href="/users/signup">ユーザー登録</a>
+</body>
+</html>

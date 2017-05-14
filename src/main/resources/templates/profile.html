@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<link rel="stylesheet" type="text/css" href="/css/style.css" />
+<title th:text="${user.name} + ' | MyBootApp'"></title>
+</head>
+<body>
+  <h1><a href="/">MyBootApp</a></h1>
+  <h2>プロフィール</h2>
+  <div class="user">
+    <div th:if="${user.hasIcon()}" class="icon">
+      <img th:src="${user.iconUri}" width="60" />
+    </div>
+    <div th:unless="${user.hasIcon()}" class="icon">
+      <img src="/image/default-user-icon.jpg" width="60" />
+    </div>
+    <div class="name">
+      <span th:text="${user.name}" class="black-text"></span>
+      <br/>
+      <span th:text="'@' + ${user.username}" class="small-text"></span>
+    </div>
+  </div>
+  <p th:if="${isMyPage}">
+    <a href="/users/edit">プロフィール編集</a>
+    <br/>
+    <a href="/users/signout">ログアウト</a>
+  </p>
+  <h2>投稿</h2>
+  <ul>
+    <li th:each="item : ${items}" class="item">
+      <div th:if="${item.user.hasIcon()}" class="user-icon">
+        <img th:src="${item.user.iconUri}" width="40" />
+      </div>
+      <div th:unless="${item.user.hasIcon()}" class="user-icon">
+        <img src="/image/default-user-icon.jpg" width="40" />
+      </div>
+      <div class="content">
+        <div>
+          <a th:href="@{'/users/' + ${item.user.id}}" th:text="${item.user.name}" class="black-text"></a>
+          <a th:href="@{'/users/' + ${item.user.id}}" th:text="'@' + ${item.user.username}" class="white-text"></a>
+        </div>
+        <p th:if="${item.hasComment()}">
+          <th:block th:each="line: ${item.comment.split('\r\n|\r|\n', -1)}">
+      	    <span th:text="${line}"></span><br/>
+      	  </th:block>
+        </p>
+        <div th:if="${item.hasImage()}">
+          <img th:src="${item.imageUri}" />
+        </div>
+        <p th:text="${item.getFormattedCreatedAt()}" class="small-text created-at"></p>
+      </div>
+    </li>
+  </ul>
+</body>
+</html>

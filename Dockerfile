@@ -1,0 +1,3 @@
+FROM java:8
+WORKDIR /myapp
+EXPOSE 8080

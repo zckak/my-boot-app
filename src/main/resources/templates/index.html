@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<link rel="stylesheet" type="text/css" href="/css/style.css" />
+<title>MyBootApp</title>
+</head>
+<body>
+  <h1><a href="/">MyBootApp</a></h1>
+  <div th:unless="${user}">
+    <a href="/users/signup">ユーザー登録</a>
+    <a href="/users/signin">ログイン</a>
+  </div>
+  <ul th:if="${msgs}">
+    <li th:each="msg:${msgs}" th:text="${msg}"></li>
+  </ul>
+  <div th:if="${user}" class="user">
+    <div th:if="${user.hasIcon()}" class="icon">
+      <img th:src="${user.iconUri}" width="60" />
+    </div>
+    <div th:unless="${user.hasIcon()}" class="icon">
+      <img src="/image/default-user-icon.jpg" width="60" />
+    </div>
+    <div class="name">
+      <a th:href="@{'/users/' + ${user.id}}" th:text="${user.name}" class="black-text"></a>
+      <br/>
+      <a th:href="@{'/users/' + ${user.id}}" th:text="'@' + ${user.username}" class="small-text"></a>
+    </div>
+  </div>
+  <form action="/items/create" method="post" enctype="multipart/form-data">
+    <textarea name="comment" placeholder="コメントを入力" cols="40" rows="7"></textarea>
+    <br/>
+    <input type="file" name="file" accept="image/*" />
+    <br/>
+    <input type="submit" value="投稿" />
+  </form>
+  <ul>
+    <li th:each="item : ${items}" class="item">
+      <div th:if="${item.user.hasIcon()}" class="user-icon">
+        <img th:src="${item.user.iconUri}" width="40" />
+      </div>
+      <div th:unless="${item.user.hasIcon()}" class="user-icon">
+        <img src="/image/default-user-icon.jpg" width="40" />
+      </div>
+      <div class="content">
+        <div>
+          <a th:href="@{'/users/' + ${item.user.id}}" th:text="${item.user.name}" class="black-text"></a>
+          <a th:href="@{'/users/' + ${item.user.id}}" th:text="'@' + ${item.user.username}" class="small-text"></a>
+        </div>
+        <p th:if="${item.hasComment()}">
+          <th:block th:each="line: ${item.comment.split('\r\n|\r|\n', -1)}">
+      	    <span th:text="${line}"></span><br/>
+      	  </th:block>
+        </p>
+        <div th:if="${item.hasImage()}">
+          <img th:src="${item.imageUri}" />
+        </div>
+        <p th:text="${item.getFormattedCreatedAt()}" class="small-text created-at"></p>
+      </div>
+    </li>
+  </ul>
+</body>
+</html>
