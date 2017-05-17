@@ -77,7 +77,7 @@ public class UsersController {
 			@RequestParam("username") String username,
 			@RequestParam("password") String password) {
 		List<String> msgs = new ArrayList<String>();
-		User user = userService.authenticate(username, password);
+		User user = userService.authUsernamePassword(username, password);
 		if (user == null) {
 			msgs.add("認証に失敗しました。");
 		}
@@ -161,6 +161,41 @@ public class UsersController {
 			redirectAttributes.addFlashAttribute("msgs", msgs);
 			return "redirect:/users/edit";
 		}
+		return "redirect:/users/" + userId;
+	}
+	
+	@RequestMapping(value="edit/password", method=RequestMethod.GET)
+	public ModelAndView editPassword(HttpSession session, ModelAndView mav) {
+		if (session.getAttribute("userId") != null) {
+			mav.setViewName("passwordEdit");
+			return mav;
+		}
+		return new ModelAndView("redirect:/users/signin");
+	}
+	
+	@RequestMapping(value="edit/password", method=RequestMethod.POST)
+	public String updatePassword(
+			RedirectAttributes redirectAttributes,
+			HttpSession session,
+			@RequestParam("old-password") String oldPassword,
+			@RequestParam("new-password") String newPassword,
+			@RequestParam("new-password-confirm") String newPasswordConfirm) {
+		if(session.getAttribute("userId") == null) {
+			return "redirect:/users/signup";
+		}
+		int userId = (int)session.getAttribute("userId");
+		List<String> msgs = new ArrayList<String>();
+		if(userService.authUserIdPassword(userId, oldPassword) == null) {
+			msgs.add("現在設定されているパスワードが一致しません。");
+		}
+		if(!newPassword.equals(newPasswordConfirm)) {
+			msgs.add("\"新しいパスワード\"と\"新しいパスワード（確認）\"が一致しません。");
+		}
+		if(msgs.size() > 0) {
+			redirectAttributes.addFlashAttribute("msgs", msgs);
+			return "redirect:/users/edit/password";
+		}
+		userService.updatePassword(userId, newPassword);
 		return "redirect:/users/" + userId;
 	}
 }

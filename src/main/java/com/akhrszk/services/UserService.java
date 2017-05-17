@@ -108,15 +108,37 @@ public class UserService extends MyService {
 		return entityManager.createQuery(query).getSingleResult();
 	}
 	
-	public User authenticate(String username, String password) {
-		User user = null;
-		try {
-			user = findByUsername(username);
-		} catch (NoResultException e) {
-			return null;
-		}
+	private boolean authenticate(User user, String password) {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		if (encoder.matches(password, user.getPassword())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public User authUserIdPassword(int userId, String password) {
+		User user = null;
+		try {
+			user = this.findById(userId);
+		} catch(NoResultException e) {
+			return null;
+		}
+		if(this.authenticate(user, password)) {
+			return user;
+		} else {
+			return null;
+		}
+	}
+	
+	public User authUsernamePassword(String username, String password) {
+		User user = null;
+		try {
+			user = this.findByUsername(username);
+		} catch(NoResultException e) {
+			return null;
+		}
+		if(this.authenticate(user, password)) {
 			return user;
 		} else {
 			return null;
