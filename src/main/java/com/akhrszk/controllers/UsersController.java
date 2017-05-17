@@ -188,6 +188,9 @@ public class UsersController {
 		if(userService.authUserIdPassword(userId, oldPassword) == null) {
 			msgs.add("現在設定されているパスワードが一致しません。");
 		}
+		if (!newPassword.matches("[0-9a-zA-Z]{4,}+$")) {
+			msgs.add("パスワードは、4文字以上の半角英数字でご入力ください。");
+		}
 		if(!newPassword.equals(newPasswordConfirm)) {
 			msgs.add("\"新しいパスワード\"と\"新しいパスワード（確認）\"が一致しません。");
 		}
